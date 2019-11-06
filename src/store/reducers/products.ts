@@ -1,15 +1,15 @@
 import { IAction } from './../../interfaces/actions';
-import IState from "../../interfaces/state";
+import { IProductState } from "../../interfaces/state";
 import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/product';
 
-const initialState: IState = {
+const initialState: IProductState = {
   availableProducts: PRODUCTS,
   userProducts: PRODUCTS.filter((product: Product) => product.ownerId === 'u1'),
 };
 
-export default (state = initialState, action: IAction): IState => {
-  let newState: IState;
+export default (state = initialState, action: IAction): IProductState => {
+  let newState: IProductState;
 
   switch(action.type){
 
