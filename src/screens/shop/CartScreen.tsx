@@ -32,7 +32,7 @@ const CartScreen: NavigationStackScreenComponent<
           productTitle: state.cart.items[key].productTitle,
           sum: state.cart.items[key].sum
         })
-    )
+    ).sort((a, b) => a.productId > b.productId ? 1 : -1)
   );
 
   const dispatch = useDispatch();
