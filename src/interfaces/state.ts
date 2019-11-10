@@ -1,11 +1,16 @@
-import { IProductState } from './state';
-import Product from "../models/product";
+import Product from '../models/product';
 
-export interface IProductState {
+export interface IProductsState {
   availableProducts: Product[];
   userProducts: Product[];
 }
 
+export interface ICartState {
+  items: any;
+  totalAmount: number;
+}
+
 export interface IGlobalState {
-  products: IProductState;
+  products: IProductsState;
+  cart: ICartState;
 }
