@@ -5,6 +5,7 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import productsReducer from './src/store/reducers/products';
 import cartReducer from './src/store/reducers/cart';
+import ordersReducer from './src/store/reducers/orders';
 import { IGlobalState } from './src/interfaces/state';
 import ShopNavigator from './src/navigation/ShopNavigator';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -12,6 +13,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 const rootReducer = combineReducers<IGlobalState>({
   products: productsReducer,
   cart: cartReducer,
+  orders: ordersReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());

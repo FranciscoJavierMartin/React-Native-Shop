@@ -24,6 +24,7 @@ export default (
 
       if (state.items[addedProduct.id]) {
         updatedOrNewCartItem = new CartItem(
+          addedProduct.id,
           state.items[addedProduct.id].quantity + 1,
           productPrice,
           productTitle,
@@ -31,6 +32,7 @@ export default (
         );
       } else {
         updatedOrNewCartItem = new CartItem(
+          addedProduct.id,
           1,
           productPrice,
           productTitle,
@@ -49,15 +51,19 @@ export default (
       const selectedCartItem: CartItem = state.items[action.payload];
       const currentQty = selectedCartItem.quantity;
       let updatedCartItems: any;
-      
+
       if (currentQty > 1) {
         const updatedCartItem = new CartItem(
+          selectedCartItem.productId,
           selectedCartItem.quantity - 1,
           selectedCartItem.productPrice,
           selectedCartItem.productTitle,
           selectedCartItem.sum - selectedCartItem.productPrice
         );
-        updatedCartItems = {...state.items, [action.payload]: updatedCartItem };
+        updatedCartItems = {
+          ...state.items,
+          [action.payload]: updatedCartItem
+        };
       } else {
         updatedCartItems = { ...state.items };
         delete updatedCartItems[action.payload];
@@ -66,7 +72,7 @@ export default (
       newState = {
         ...state,
         items: updatedCartItems,
-        totalAmount: state.totalAmount - selectedCartItem.productPrice,
+        totalAmount: state.totalAmount - selectedCartItem.productPrice
       };
       break;
     default:
