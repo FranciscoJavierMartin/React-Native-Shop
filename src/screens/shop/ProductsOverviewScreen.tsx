@@ -14,9 +14,10 @@ import cartActions from '../../store/actions/cart';
 
 interface IProductsOverviewScreenProps extends NavigationStackScreenProps {}
 
-const ProductsOverviewScreen: NavigationStackScreenComponent<any, IProductsOverviewScreenProps> = (
-  props: IProductsOverviewScreenProps
-) => {
+const ProductsOverviewScreen: NavigationStackScreenComponent<
+  any,
+  IProductsOverviewScreenProps
+> = (props: IProductsOverviewScreenProps) => {
   const products = useSelector(
     (state: IGlobalState) => state.products.availableProducts
   );
@@ -45,22 +46,34 @@ const ProductsOverviewScreen: NavigationStackScreenComponent<any, IProductsOverv
   );
 };
 
-ProductsOverviewScreen.navigationOptions =(
-  navigationData: NavigationStackScreenProps<
-    any,
-    IProductsOverviewScreenProps
-  >
-) => { return {
-  headerTitle: 'All products',
-  headerRight: (
-    <HeaderButtons HeaderButtonComponent={HeaderButton}>
-      <Item
-        title='Cart'
-        iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-        onPress={() => { navigationData.navigation.navigate('Cart')}}
-      />
-    </HeaderButtons>
-  )
-};}
+ProductsOverviewScreen.navigationOptions = (
+  navigationData: NavigationStackScreenProps<any, IProductsOverviewScreenProps>
+) => {
+  return {
+    headerTitle: 'All products',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {
+            navigationData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Cart'
+          iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+          onPress={() => {
+            navigationData.navigation.navigate('Cart');
+          }}
+        />
+      </HeaderButtons>
+    )
+  };
+};
 
 export default ProductsOverviewScreen;

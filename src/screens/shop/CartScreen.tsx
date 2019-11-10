@@ -24,8 +24,7 @@ const CartScreen: NavigationStackScreenComponent<
     (state: IGlobalState) => state.cart.totalAmount
   );
 
-  //TODO: Add productId to CartItem class
-  const cartItems = useSelector<IGlobalState, any>((state: IGlobalState) =>
+  const cartItems = useSelector<IGlobalState, CartItem[]>((state: IGlobalState) =>
     Object.keys(state.cart.items)
       .map((key: string) => new CartItem(
         key,

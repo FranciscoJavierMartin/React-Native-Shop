@@ -3,6 +3,7 @@ import { IAction } from '../../interfaces/actions';
 import CartItem from '../../models/cart-item';
 import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/cart';
 import Product from '../../models/product';
+import { ADD_ORDER } from '../actions/orders';
 
 const initialState: ICartState = {
   items: {},
@@ -75,6 +76,9 @@ export default (
         totalAmount: state.totalAmount - selectedCartItem.productPrice
       };
       break;
+      case ADD_ORDER:
+        newState = initialState;
+        break;
     default:
       newState = state;
   }
