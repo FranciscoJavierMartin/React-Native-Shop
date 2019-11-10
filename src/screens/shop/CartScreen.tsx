@@ -57,6 +57,7 @@ const CartScreen: NavigationStackScreenComponent<
         keyExtractor={(item: CartItem) => item.productId}
         renderItem={({ item }) => (
           <CartItemComponent
+            deletable
             quantity={item.quantity}
             title={item.productTitle}
             amount={item.sum}

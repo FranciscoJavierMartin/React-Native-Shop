@@ -1,4 +1,5 @@
 import CartItem from "./cart-item";
+import moment from 'moment'
 
 class Order{
   constructor(
@@ -7,6 +8,10 @@ class Order{
     public totalAmount: number,
     public date: Date
   ){}
+
+  get readableDate(): string {
+    return moment(this.date).format('MMMM Do YYYY, hh:mm');
+  }
 }
 
 export default Order;

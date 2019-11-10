@@ -11,6 +11,7 @@
     "@expo/vector-icons": "^10.0.0",
     "expo": "^35.0.0",
     "expo-font": "~7.0.0",
+    "moment": "^2.24.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/expo__vector-icons": "^9.0.1",
+    "@types/moment": "^2.13.0",
     "@types/react": "^16.8.23",
     "@types/react-native": "^0.57.65",
     "@types/react-navigation": "^3.0.8",

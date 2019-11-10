@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import HeaderButton from '../../components/ui/HeaderButton';
 import { IGlobalState } from '../../interfaces/state';
 import Order from '../../models/order';
+import OrderItem from '../../components/shop/OrderItem';
 
 interface IOrdersScreenProps extends NavigationStackScreenProps {}
 
@@ -23,7 +24,9 @@ const OrdersScreen: NavigationStackScreenComponent<any, IOrdersScreenProps> = (
     <FlatList
       data={orders}
       keyExtractor={(item: Order) => item.id}
-      renderItem={({ item }) => <Text>{item.totalAmount}</Text>}
+      renderItem={({ item }) => (
+        <OrderItem amount={item.totalAmount} date={item.readableDate}  items={item.items}/>
+      )}
     />
   );
 };

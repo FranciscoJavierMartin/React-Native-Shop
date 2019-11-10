@@ -9,10 +9,11 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 interface ICartItemProps {
-  onRemove: () => void;
+  onRemove?: () => void;
   title: string;
   quantity: number;
   amount: number;
+  deletable?: boolean;
 }
 
 const CartItem = (props: ICartItemProps) => {
@@ -24,13 +25,13 @@ const CartItem = (props: ICartItemProps) => {
       </Text>
       <View style={styles.itemData}>
         <Text style={styles.mainText}>${props.amount.toFixed(2)}</Text>
-        <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
+        {props.deletable && <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
           <Ionicons
             name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
             size={23}
             color='red'
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </View>
   );
