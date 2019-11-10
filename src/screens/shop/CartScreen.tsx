@@ -25,12 +25,7 @@ const CartScreen: NavigationStackScreenComponent<
   const cartItems = useSelector<IGlobalState, any>((state: IGlobalState) =>
     Object.keys(state.cart.items).map(
       (key: string) =>
-        /*new CartItem(
-          state.cart.items[key].quantity,
-          state.cart.items[key].productPrice,
-          state.cart.items[key].productTitle,
-          state.cart.items[key].sum
-        )*/({
+       ({
           productId: key,
           quantity: state.cart.items[key].quantity,
           productPrice: state.cart.items[key].productPrice,
@@ -57,7 +52,7 @@ const CartScreen: NavigationStackScreenComponent<
       </View>
       <FlatList
         data={cartItems}
-        keyExtractor={(item: any) => item.productTitle}
+        keyExtractor={(item: any) => item.productId}
         renderItem={({ item }) => (
           <CartItemComponent
             quantity={item.quantity}
