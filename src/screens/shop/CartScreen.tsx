@@ -9,6 +9,7 @@ import { ICartScreenParams } from '../../interfaces/params';
 import { IGlobalState } from '../../interfaces/state';
 import Colors from '../../constants/Colors';
 import CartItemComponent from '../../components/shop/CartItem';
+import Card from '../../components/ui/Card';
 import cartActions from '../../store/actions/cart';
 import orderActions from '../../store/actions/orders';
 import CartItem from '../../models/cart-item';
@@ -44,7 +45,7 @@ const CartScreen: NavigationStackScreenComponent<
 
   return (
     <View style={styles.screen}>
-      <View style={styles.summary}>
+      <Card style={styles.summary}>
         <Text style={styles.summaryText}>
           Total:{' '}
           <Text style={styles.amount}>
@@ -58,7 +59,7 @@ const CartScreen: NavigationStackScreenComponent<
           }}
           disabled={cartItems.length === 0}
         />
-      </View>
+      </Card>
       <FlatList
         data={cartItems}
         keyExtractor={(item: CartItem) => item.productId}
@@ -86,13 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
     padding: 10,
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: 'white'
   },
   summaryText: {
     fontFamily: 'open-sans-bold',
