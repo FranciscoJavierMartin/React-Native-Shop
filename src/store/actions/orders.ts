@@ -3,7 +3,7 @@ import { IAction } from "../../interfaces/actions";
 
 export const ADD_ORDER = 'ADD_ORDER';
 
-export const addOrder = (cartItems: any[], totalAmount: number): IAction => {
+const addOrder = (cartItems: CartItem[], totalAmount: number): IAction => {
   return {
     type: ADD_ORDER,
     payload: {

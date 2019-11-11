@@ -24,15 +24,20 @@ const CartScreen: NavigationStackScreenComponent<
     (state: IGlobalState) => state.cart.totalAmount
   );
 
-  const cartItems = useSelector<IGlobalState, CartItem[]>((state: IGlobalState) =>
-    Object.keys(state.cart.items)
-      .map((key: string) => new CartItem(
-        key,
-        state.cart.items[key].quantity,
-        state.cart.items[key].productPrice,
-        state.cart.items[key].productTitle,
-        state.cart.items[key].sum
-      )).sort((a, b) => (a.productId > b.productId ? 1 : -1))
+  const cartItems = useSelector<IGlobalState, CartItem[]>(
+    (state: IGlobalState) =>
+      Object.keys(state.cart.items)
+        .map(
+          (key: string) =>
+            new CartItem(
+              key,
+              state.cart.items[key].quantity,
+              state.cart.items[key].productPrice,
+              state.cart.items[key].productTitle,
+              state.cart.items[key].sum
+            )
+        )
+        .sort((a, b) => (a.productId > b.productId ? 1 : -1))
   );
 
   const dispatch = useDispatch();
@@ -42,7 +47,9 @@ const CartScreen: NavigationStackScreenComponent<
       <View style={styles.summary}>
         <Text style={styles.summaryText}>
           Total:{' '}
-          <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
+          <Text style={styles.amount}>
+            ${(Math.round(cartTotalAmount * 100) / 100).toFixed(2)}
+          </Text>
         </Text>
         <Button
           title='Order now'

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add -D @types/react-navigation-drawer
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add -D @types/react-native-screens
 
 PATH: 
   /Users/francisco/.sdkman/candidates/scala/current/bin:/Users/francisco/.sdkman/candidates/sbt/current/bin:/Users/francisco/.sdkman/candidates/java/current/bin:/Users/francisco/Aplicaciones/anaconda3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2freact-navigation-drawer: Not found
+  Error: https://registry.yarnpkg.com/@types%2freact-native-screens: Not found
       at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:66926:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:140564:22)
       at Request.emit (events.js:198:13)
@@ -40,11 +40,13 @@ npm manifest:
       "@expo/vector-icons": "^10.0.0",
       "expo": "^35.0.0",
       "expo-font": "~7.0.0",
+      "moment": "^2.24.0",
       "react": "16.8.3",
       "react-dom": "16.8.3",
       "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
       "react-native-gesture-handler": "~1.3.0",
       "react-native-reanimated": "~1.2.0",
+      "react-native-screens": "^2.0.0-alpha.8",
       "react-native-web": "^0.11.7",
       "react-navigation": "^4.0.10",
       "react-navigation-drawer": "^2.3.3",
@@ -55,6 +57,7 @@ npm manifest:
     },
     "devDependencies": {
       "@types/expo__vector-icons": "^9.0.1",
+      "@types/moment": "^2.13.0",
       "@types/react": "^16.8.23",
       "@types/react-native": "^0.57.65",
       "@types/react-navigation": "^3.0.8",
@@ -1038,6 +1041,13 @@ Lockfile:
     version "4.14.144"
     resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.144.tgz#12e57fc99064bce45e5ab3c8bc4783feb75eab8e"
     integrity sha512-ogI4g9W5qIQQUhXAclq6zhqgqNUr7UlFaqDHbch7WLSLeeM/7d3CRaw7GLajxvyFvhJqw4Rpcz5bhoaYtIx6Tg==
+  
+  "@types/moment@^2.13.0":
+    version "2.13.0"
+    resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+    integrity sha1-YE69GJvDvDShVIaJQE5hoqSqyJY=
+    dependencies:
+      moment "*"
   
   "@types/prop-types@*":
     version "15.7.3"
@@ -3724,6 +3734,11 @@ Lockfile:
     dependencies:
       minimist "0.0.8"
   
+  moment@*, moment@^2.24.0:
+    version "2.24.0"
+    resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+    integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+  
   morgan@^1.9.0:
     version "1.9.1"
     resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -4420,6 +4435,13 @@ Lockfile:
     version "1.0.0-alpha.23"
     resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.23.tgz#25d7ea4d11bda4fcde2d1da7ae50271c6aa636e0"
     integrity sha512-tOxHGQUN83MTmQB4ghoQkibqOdGiX4JQEmeyEv96MKWO/x8T2PJv84ECUos9hD3blPRQwVwSpAid1PPPhrVEaw==
+    dependencies:
+      debounce "^1.2.0"
+  
+  react-native-screens@^2.0.0-alpha.8:
+    version "2.0.0-alpha.8"
+    resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.0.0-alpha.8.tgz#18ac2b60216a165c6cc206266bc96efd7f6b3ea9"
+    integrity sha512-LfDHDk6TS1W2JGlEDUOy6dh3/PhWzhidQy5vZJL0uoUHVXDmLdPy7j7OP4PHPNeTHwQ9DS9nthBj7XMyUJhW/Q==
     dependencies:
       debounce "^1.2.0"
   

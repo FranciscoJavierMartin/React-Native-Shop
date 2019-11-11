@@ -3,12 +3,16 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
+import { enableScreens } from 'react-native-screens';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 import productsReducer from './src/store/reducers/products';
 import cartReducer from './src/store/reducers/cart';
 import ordersReducer from './src/store/reducers/orders';
 import { IGlobalState } from './src/interfaces/state';
 import ShopNavigator from './src/navigation/ShopNavigator';
-import { composeWithDevTools } from 'redux-devtools-extension';
+
+enableScreens();
 
 const rootReducer = combineReducers<IGlobalState>({
   products: productsReducer,

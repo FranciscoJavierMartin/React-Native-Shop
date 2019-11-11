@@ -6,3 +6,8 @@ export interface IProductDetailScreenParams {
 export interface ICartScreenParams {
 
 }
+
+export interface IEditProductsScreenParams {
+  productId: string;
+  submit: () => void;
+}
