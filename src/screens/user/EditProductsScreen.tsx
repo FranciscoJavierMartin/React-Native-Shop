@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useReducer } from 'react';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
   ScrollView,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import {
   NavigationStackScreenComponent,
@@ -18,6 +19,7 @@ import HeaderButton from '../../components/ui/HeaderButton';
 import { IGlobalState } from '../../interfaces/state';
 import Product from '../../models/product';
 import productsActions from '../../store/actions/products';
+import Input from '../../components/ui/Input';
 
 interface IEditProductsScreenProps
   extends NavigationStackScreenProps<
@@ -25,97 +27,191 @@ interface IEditProductsScreenProps
     IEditProductsScreenProps
   > {}
 
+interface IInputValues{
+  title: string;
+  imageUrl: string;
+  description: string;
+  price: string;
+}
+
+interface IInputValidities{
+  title: boolean;
+  imageUrl: boolean;
+  description: boolean;
+  price: boolean;
+}
+
+interface IInputState {
+  inputValues: IInputValues;
+  inputValidities: IInputValidities;
+  formIsValid: boolean;
+}
+
+interface IInputAction {
+  type: string;
+  isValid: boolean;
+  value: string;
+  input: string
+}
+
+const FORM_INPUT_UPDATE = 'UPDATE';
+
+const formReducer = (state: IInputState, action: IInputAction): IInputState => {
+  let newState: IInputState;
+
+  switch(action.type) {
+    case FORM_INPUT_UPDATE:
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
+    };
+
+    const updatedFormIsValid = Object.keys(updatedValidities).some((key: string) => updatedValidities[key])
+
+    newState = {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues
+    };
+    break;
+    default:
+      newState = state;
+  }
+
+  return newState;
+};
+
 const EditProductsScreen: NavigationStackScreenComponent<
   IEditProductsScreenParams,
   IEditProductsScreenProps
 > = (props: IEditProductsScreenProps) => {
   const dispatch = useDispatch();
   const productId = props.navigation.getParam('productId');
-  console.log({ productId });
+
   const editedProduct = useSelector<IGlobalState, Product>(
     (state: IGlobalState) =>
       state.products.userProducts.find(
         (product: Product) => (product.id = productId)
       )
   );
-  console.log({ editedProduct });
 
-  const [title, setTitle] = useState<string>(
-    editedProduct ? editedProduct.title : ''
-  );
-  const [imageUrl, setImageUrl] = useState<string>(
-    editedProduct ? editedProduct.imageUrl : ''
-  );
-  // TODO: Research if there is another way to use number instead of string
-  const [price, setPrice] = useState<string>(
-    editedProduct ? editedProduct.price.toString() : ''
-  );
-  const [description, setDescription] = useState<string>(
-    editedProduct ? editedProduct.description : ''
-  );
+  const [formState, dispatchFormState] = useReducer<(state: IInputState, action: IInputAction) => IInputState>(formReducer, {
+    inputValues: {
+      title: editedProduct ? editedProduct.title : '',
+      imageUrl: editedProduct ? editedProduct.imageUrl : '',
+      description: editedProduct ? editedProduct.description : '',
+      price: editedProduct ? editedProduct.price.toString() : ''
+    },
+    inputValidities: {
+      title: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      description: editedProduct ? true : false,
+      price: editedProduct ? true : false
+    },
+    formIsValid: editedProduct ? true : false
+  });
 
   const submitHandler = useCallback(() => {
-    if (editedProduct) {
-      dispatch(
-        productsActions.updateProduct(
-          productId,
-          title,
-          description,
-          imageUrl,
-          +price
-        )
-      );
-    } else {
-      dispatch(
-        productsActions.createProduct(title, description, imageUrl, +price)
-      );
+    if (formState.formIsValid) {
+      if (editedProduct) {
+        dispatch(
+          productsActions.updateProduct(
+            productId,
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+            +formState.inputValues.price
+          )
+        );
+      } else {
+        dispatch(
+          productsActions.createProduct(
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+            +formState.inputValues.price
+          )
+        );
+      }
+      props.navigation.goBack();
     }
-    props.navigation.goBack();
-  }, [dispatch, productId, title, description, imageUrl, price]);
+  }, [dispatch, productId, formState]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  const inputChangeHandler = useCallback((inputIdentifier: string, inputValue: string, inputValidity: boolean) => {
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: inputValue,
+      isValid: inputValidity,
+      input: inputIdentifier
+    });
+  },[dispatchFormState]);
+
   return (
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior="padding"
+      keyboardVerticalOffset={100}>
     <ScrollView>
       <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={title}
-            onChangeText={(text: string) => setTitle(text)}
+       <Input
+            id="title"
+            label="Title"
+            errorText="Enter a valid title"
+            onInputChange={inputChangeHandler}
+            returnKeyType='next'
+            initialValue={editedProduct ? editedProduct.title : ''}
+            initiallyValid={!!editedProduct}
+            required
           />
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={imageUrl}
-            onChangeText={(text: string) => setImageUrl(text)}
+         <Input
+            id="imageUrl"
+            label="Image Url"
+            errorText="Please enter a valid image url!"
+            keyboardType="default"
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ''}
+            initiallyValid={!!editedProduct}
+            required
           />
-        </View>
-        {editedProduct ? null : (
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.input}
-              value={price}
-              onChangeText={(text: string) => setPrice(text)}
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              errorText="Please enter a valid price!"
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+              onInputChange={inputChangeHandler}
+              required
+              min={0.1}
             />
-          </View>
-        )}
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={description}
-            onChangeText={(text: string) => setDescription(text)}
+          )}
+          <Input
+            id="description"
+            label="Description"
+            errorText="Please enter a valid description!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ''}
+            initiallyValid={!!editedProduct}
+            required
+            minLength={5}
           />
-        </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -148,19 +244,6 @@ const styles = StyleSheet.create({
   form: {
     margin: 20
   },
-  formControl: {
-    width: '100%'
-  },
-  label: {
-    fontFamily: 'open-sans-bold',
-    marginVertical: 8
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1
-  }
 });
 
 export default EditProductsScreen;
