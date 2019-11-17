@@ -5,7 +5,8 @@ import Product from '../../models/product';
 import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
-  UPDATE_PRODUCT
+  UPDATE_PRODUCT,
+  SET_PRODUCTS
 } from '../actions/products';
 
 const initialState: IProductsState = {
@@ -20,9 +21,15 @@ export default (
   let newState: IProductsState;
 
   switch (action.type) {
+    case SET_PRODUCTS:
+      newState = {
+        availableProducts: action.payload,
+        userProducts: action.payload.filter((product: Product) => product.ownerId === 'u1')
+      }
+      break;
     case CREATE_PRODUCT:
       const newProduct = new Product(
-        new Date().toString(),
+        action.payload.id,
         'u1',
         action.payload.title,
         action.payload.imageUrl,

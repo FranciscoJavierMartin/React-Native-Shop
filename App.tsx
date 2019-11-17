@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { enableScreens } from 'react-native-screens';
-import { composeWithDevTools } from 'redux-devtools-extension';
+// Disable for production mode
+//import { composeWithDevTools } from 'redux-devtools-extension';
+import ReduxThunk from 'redux-thunk';
 
 import productsReducer from './src/store/reducers/products';
 import cartReducer from './src/store/reducers/cart';
@@ -20,7 +22,7 @@ const rootReducer = combineReducers<IGlobalState>({
   orders: ordersReducer,
 });
 
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () =>
   Font.loadAsync({

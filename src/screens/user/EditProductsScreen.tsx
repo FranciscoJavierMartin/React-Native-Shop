@@ -1,12 +1,12 @@
-import React, { useEffect, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer, useState } from 'react';
 import {
   View,
-  Text,
-  TextInput,
   StyleSheet,
   ScrollView,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import {
   NavigationStackScreenComponent,
@@ -20,6 +20,7 @@ import { IGlobalState } from '../../interfaces/state';
 import Product from '../../models/product';
 import productsActions from '../../store/actions/products';
 import Input from '../../components/ui/Input';
+import Colors from '../../constants/Colors';
 
 interface IEditProductsScreenProps
   extends NavigationStackScreenProps<
@@ -27,14 +28,14 @@ interface IEditProductsScreenProps
     IEditProductsScreenProps
   > {}
 
-interface IInputValues{
+interface IInputValues {
   title: string;
   imageUrl: string;
   description: string;
   price: string;
 }
 
-interface IInputValidities{
+interface IInputValidities {
   title: boolean;
   imageUrl: boolean;
   description: boolean;
@@ -51,7 +52,7 @@ interface IInputAction {
   type: string;
   isValid: boolean;
   value: string;
-  input: string
+  input: string;
 }
 
 const FORM_INPUT_UPDATE = 'UPDATE';
@@ -59,25 +60,27 @@ const FORM_INPUT_UPDATE = 'UPDATE';
 const formReducer = (state: IInputState, action: IInputAction): IInputState => {
   let newState: IInputState;
 
-  switch(action.type) {
+  switch (action.type) {
     case FORM_INPUT_UPDATE:
-    const updatedValues = {
-      ...state.inputValues,
-      [action.input]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.input]: action.isValid
-    };
+      const updatedValues = {
+        ...state.inputValues,
+        [action.input]: action.value
+      };
+      const updatedValidities = {
+        ...state.inputValidities,
+        [action.input]: action.isValid
+      };
 
-    const updatedFormIsValid = Object.keys(updatedValidities).some((key: string) => updatedValidities[key])
+      const updatedFormIsValid = Object.keys(updatedValidities).some(
+        (key: string) => updatedValidities[key]
+      );
 
-    newState = {
-      formIsValid: updatedFormIsValid,
-      inputValidities: updatedValidities,
-      inputValues: updatedValues
-    };
-    break;
+      newState = {
+        formIsValid: updatedFormIsValid,
+        inputValidities: updatedValidities,
+        inputValues: updatedValues
+      };
+      break;
     default:
       newState = state;
   }
@@ -89,6 +92,8 @@ const EditProductsScreen: NavigationStackScreenComponent<
   IEditProductsScreenParams,
   IEditProductsScreenProps
 > = (props: IEditProductsScreenProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState();
   const dispatch = useDispatch();
   const productId = props.navigation.getParam('productId');
 
@@ -99,7 +104,9 @@ const EditProductsScreen: NavigationStackScreenComponent<
       )
   );
 
-  const [formState, dispatchFormState] = useReducer<(state: IInputState, action: IInputAction) => IInputState>(formReducer, {
+  const [formState, dispatchFormState] = useReducer<
+    (state: IInputState, action: IInputAction) => IInputState
+  >(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : '',
       imageUrl: editedProduct ? editedProduct.imageUrl : '',
@@ -115,29 +122,44 @@ const EditProductsScreen: NavigationStackScreenComponent<
     formIsValid: editedProduct ? true : false
   });
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occurred', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
+
+  const submitHandler = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
     if (formState.formIsValid) {
-      if (editedProduct) {
-        dispatch(
-          productsActions.updateProduct(
-            productId,
-            formState.inputValues.title,
-            formState.inputValues.description,
-            formState.inputValues.imageUrl,
-            +formState.inputValues.price
-          )
-        );
-      } else {
-        dispatch(
-          productsActions.createProduct(
-            formState.inputValues.title,
-            formState.inputValues.description,
-            formState.inputValues.imageUrl,
-            +formState.inputValues.price
-          )
-        );
+      try {
+        if (editedProduct) {
+          await dispatch(
+            productsActions.updateProduct(
+              productId,
+              formState.inputValues.title,
+              formState.inputValues.description,
+              formState.inputValues.imageUrl,
+              +formState.inputValues.price
+            )
+          ).then();
+        } else {
+          await dispatch(
+            productsActions.createProduct(
+              formState.inputValues.title,
+              formState.inputValues.description,
+              formState.inputValues.imageUrl,
+              +formState.inputValues.price
+            )
+          );
+        }
+
+        props.navigation.goBack();
+      } catch (error) {
+        setError(error);
       }
-      props.navigation.goBack();
+
+      setIsLoading(false);
     }
   }, [dispatch, productId, formState]);
 
@@ -145,38 +167,46 @@ const EditProductsScreen: NavigationStackScreenComponent<
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
-  const inputChangeHandler = useCallback((inputIdentifier: string, inputValue: string, inputValidity: boolean) => {
-    dispatchFormState({
-      type: FORM_INPUT_UPDATE,
-      value: inputValue,
-      isValid: inputValidity,
-      input: inputIdentifier
-    });
-  },[dispatchFormState]);
+  const inputChangeHandler = useCallback(
+    (inputIdentifier: string, inputValue: string, inputValidity: boolean) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier
+      });
+    },
+    [dispatchFormState]
+  );
 
-  return (
+  return isLoading ? (
+    <View style={styles.centered}>
+      <ActivityIndicator size='large' color={Colors.primary} />
+    </View>
+  ) : (
     <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior="padding"
-      keyboardVerticalOffset={100}>
-    <ScrollView>
-      <View style={styles.form}>
-       <Input
-            id="title"
-            label="Title"
-            errorText="Enter a valid title"
+      style={{ flex: 1 }}
+      behavior='padding'
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView>
+        <View style={styles.form}>
+          <Input
+            id='title'
+            label='Title'
+            errorText='Enter a valid title'
             onInputChange={inputChangeHandler}
             returnKeyType='next'
             initialValue={editedProduct ? editedProduct.title : ''}
             initiallyValid={!!editedProduct}
             required
           />
-         <Input
-            id="imageUrl"
-            label="Image Url"
-            errorText="Please enter a valid image url!"
-            keyboardType="default"
-            returnKeyType="next"
+          <Input
+            id='imageUrl'
+            label='Image Url'
+            errorText='Please enter a valid image url!'
+            keyboardType='default'
+            returnKeyType='next'
             onInputChange={inputChangeHandler}
             initialValue={editedProduct ? editedProduct.imageUrl : ''}
             initiallyValid={!!editedProduct}
@@ -184,22 +214,22 @@ const EditProductsScreen: NavigationStackScreenComponent<
           />
           {editedProduct ? null : (
             <Input
-              id="price"
-              label="Price"
-              errorText="Please enter a valid price!"
-              keyboardType="decimal-pad"
-              returnKeyType="next"
+              id='price'
+              label='Price'
+              errorText='Please enter a valid price!'
+              keyboardType='decimal-pad'
+              returnKeyType='next'
               onInputChange={inputChangeHandler}
               required
               min={0.1}
             />
           )}
           <Input
-            id="description"
-            label="Description"
-            errorText="Please enter a valid description!"
-            keyboardType="default"
-            autoCapitalize="sentences"
+            id='description'
+            label='Description'
+            errorText='Please enter a valid description!'
+            keyboardType='default'
+            autoCapitalize='sentences'
             autoCorrect
             multiline
             numberOfLines={3}
@@ -209,8 +239,8 @@ const EditProductsScreen: NavigationStackScreenComponent<
             required
             minLength={5}
           />
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -244,6 +274,11 @@ const styles = StyleSheet.create({
   form: {
     margin: 20
   },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 
 export default EditProductsScreen;

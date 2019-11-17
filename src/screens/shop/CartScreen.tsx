@@ -1,5 +1,12 @@
-import React from 'react';
-import { Text, View, StyleSheet, FlatList, Button } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  Button,
+  ActivityIndicator
+} from 'react-native';
 import {
   NavigationStackScreenProps,
   NavigationStackScreenComponent
@@ -21,6 +28,7 @@ const CartScreen: NavigationStackScreenComponent<
   ICartScreenParams,
   ICartScreenProps
 > = (props: ICartScreenProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const cartTotalAmount = useSelector<IGlobalState, number>(
     (state: IGlobalState) => state.cart.totalAmount
   );
@@ -43,6 +51,12 @@ const CartScreen: NavigationStackScreenComponent<
 
   const dispatch = useDispatch();
 
+  const sendOrderHandler = async () => {
+    setIsLoading(true);
+    dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
+    setIsLoading(false);
+  };
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -52,13 +66,15 @@ const CartScreen: NavigationStackScreenComponent<
             ${(Math.round(cartTotalAmount * 100) / 100).toFixed(2)}
           </Text>
         </Text>
-        <Button
-          title='Order now'
-          onPress={() => {
-            dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
-          }}
-          disabled={cartItems.length === 0}
-        />
+        {isLoading ? (
+          <ActivityIndicator size='small' color={Colors.primary} />
+        ) : (
+          <Button
+            title='Order now'
+            onPress={sendOrderHandler}
+            disabled={cartItems.length === 0}
+          />
+        )}
       </Card>
       <FlatList
         data={cartItems}
@@ -86,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    padding: 10,
+    padding: 10
   },
   summaryText: {
     fontFamily: 'open-sans-bold',
