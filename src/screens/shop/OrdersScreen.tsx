@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Platform,
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  Text
 } from 'react-native';
 import {
   NavigationStackScreenProps,
@@ -41,7 +42,11 @@ const OrdersScreen: NavigationStackScreenComponent<any, IOrdersScreenProps> = (
     <View style={styles.centered}>
       <ActivityIndicator size='large' color={Colors.primary} />
     </View>
-  ) : (
+  ) : orders.length === 0 ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>No order found</Text>
+    </View>
+  ) :(
     <FlatList
       data={orders}
       keyExtractor={(item: Order) => item.id}

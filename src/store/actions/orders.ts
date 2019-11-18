@@ -7,7 +7,9 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 const addOrder = (cartItems: CartItem[], totalAmount: number): any => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
     const response = await fetch(BASE_URL, {
       method: 'POST',

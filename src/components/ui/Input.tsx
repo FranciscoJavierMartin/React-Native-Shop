@@ -1,7 +1,8 @@
 import React, { useReducer, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
+import { TextInputProps } from "react-native" // added this line
 
-interface IInputProps {
+interface IInputProps extends TextInputProps{
   label: string;
   errorText: string;
   initialValue?: string;
@@ -13,7 +14,6 @@ interface IInputProps {
   min?: number;
   max?: number;
   minLength?: number;
-  returnKeyType?: string;
 }
 
 interface IInputState {

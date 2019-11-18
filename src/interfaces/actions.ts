@@ -3,3 +3,10 @@ export interface IAction {
   type: string;
   payload: any;
 }
+
+export interface IInputAction {
+  type: string;
+  isValid: boolean;
+  value: string;
+  input: string;
+}

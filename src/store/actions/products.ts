@@ -9,7 +9,9 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 const fetchProducts = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const userId = getState().auth.userId;
+
     try {
       const response = await fetch(BASE_URL);
       const resData = await response.json();
@@ -24,7 +26,7 @@ const fetchProducts = () => {
         loadedProducts.push(
           new Product(
             key,
-            'u1',
+            resData[key].ownerId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -35,7 +37,13 @@ const fetchProducts = () => {
 
       dispatch({
         type: SET_PRODUCTS,
-        payload: loadedProducts
+        //payload: loadedProducts,
+        payload: {
+          products: loadedProducts,
+          userProducts: loadedProducts.filter(
+            (product: Product) => product.ownerId === userId
+          )
+        }
       });
     } catch (error) {
       throw error;
@@ -44,12 +52,11 @@ const fetchProducts = () => {
 };
 const deleteProduct = (productId: string): any => {
   return async (dispatch: any) => {
-
     const response = await fetch(BASE_URL, {
-      method: 'DELETE',
+      method: 'DELETE'
     });
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error('Something went wrong');
     }
 
@@ -66,7 +73,9 @@ const createProduct = (
   imageUrl: string,
   price: number
 ) => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
@@ -101,7 +110,8 @@ const updateProduct = (
   imageUrl: string,
   price: number
 ): any => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const token = getState().auth.token;
     const response = await fetch(BASE_URL, {
       method: 'PATCH',
       headers: {
@@ -114,7 +124,7 @@ const updateProduct = (
       })
     });
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error('Something went wrong');
     }
 

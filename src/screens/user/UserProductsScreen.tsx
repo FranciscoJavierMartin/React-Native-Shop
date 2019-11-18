@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, Button, Alert } from 'react-native';
+import { FlatList, Platform, Button, Alert, View, Text } from 'react-native';
 import {
   NavigationStackScreenComponent,
   NavigationStackScreenProps
@@ -34,12 +34,21 @@ const UserProductsScreen: NavigationStackScreenComponent<
   const deleteHandler = (id: string) => {
     Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
       { text: 'No', style: 'default' },
-      { text: 'Yes', style: 'destructive', onPress: () => { dispatch(productsActions.deleteProduct(id))
-      } }
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(productsActions.deleteProduct(id));
+        }
+      }
     ]);
   };
-              
-  return (
+
+  return userProducts.length === 0 ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>No products found</Text>
+    </View>
+  ) : (
     <FlatList
       data={userProducts}
       keyExtractor={(product: Product) => product.id}
@@ -50,7 +59,8 @@ const UserProductsScreen: NavigationStackScreenComponent<
           price={item.price}
           onSelect={() => {
             editProductHandler(item.id);
-          }}>
+          }}
+        >
           <Button
             title='Edit'
             onPress={() => {

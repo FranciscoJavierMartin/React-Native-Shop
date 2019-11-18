@@ -23,9 +23,9 @@ export default (
   switch (action.type) {
     case SET_PRODUCTS:
       newState = {
-        availableProducts: action.payload,
-        userProducts: action.payload.filter((product: Product) => product.ownerId === 'u1')
-      }
+        availableProducts: action.payload.products,
+        userProducts: action.payload.userProducts
+      };
       break;
     case CREATE_PRODUCT:
       const newProduct = new Product(

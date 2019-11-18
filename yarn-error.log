@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add -D @types/react-native-screens
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add -D @types/react-native-safe-area-view
 
 PATH: 
   /Users/francisco/.sdkman/candidates/scala/current/bin:/Users/francisco/.sdkman/candidates/sbt/current/bin:/Users/francisco/.sdkman/candidates/java/current/bin:/Users/francisco/Aplicaciones/anaconda3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2freact-native-screens: Not found
+  Error: https://registry.yarnpkg.com/@types%2freact-native-safe-area-view: Not found
       at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:66926:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:140564:22)
       at Request.emit (events.js:198:13)
@@ -40,12 +40,14 @@ npm manifest:
       "@expo/vector-icons": "^10.0.0",
       "expo": "^35.0.0",
       "expo-font": "~7.0.0",
+      "expo-linear-gradient": "~7.0.0",
       "moment": "^2.24.0",
       "react": "16.8.3",
       "react-dom": "16.8.3",
       "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
       "react-native-gesture-handler": "~1.3.0",
       "react-native-reanimated": "~1.2.0",
+      "react-native-safe-area-view": "^1.0.0",
       "react-native-screens": "^2.0.0-alpha.8",
       "react-native-web": "^0.11.7",
       "react-navigation": "^4.0.10",
@@ -53,7 +55,8 @@ npm manifest:
       "react-navigation-header-buttons": "^3.0.4",
       "react-navigation-stack": "^1.10.3",
       "react-redux": "^7.1.3",
-      "redux": "^4.0.4"
+      "redux": "^4.0.4",
+      "redux-thunk": "^2.3.0"
     },
     "devDependencies": {
       "@types/expo__vector-icons": "^9.0.1",
@@ -63,6 +66,7 @@ npm manifest:
       "@types/react-navigation": "^3.0.8",
       "@types/react-redux": "^7.1.5",
       "@types/redux": "^3.6.0",
+      "@types/redux-thunk": "^2.1.0",
       "babel-preset-expo": "^7.1.0",
       "redux-devtools-extension": "^2.13.8",
       "typescript": "^3.6.3"
@@ -1108,6 +1112,13 @@ Lockfile:
     dependencies:
       "@types/prop-types" "*"
       csstype "^2.2.0"
+  
+  "@types/redux-thunk@^2.1.0":
+    version "2.1.0"
+    resolved "https://registry.yarnpkg.com/@types/redux-thunk/-/redux-thunk-2.1.0.tgz#bc2b6e972961831afb82a9bf4f06726e351f9416"
+    integrity sha1-vCtulylhgxr7gqm/TwZybjUflBY=
+    dependencies:
+      redux-thunk "*"
   
   "@types/redux@^3.6.0":
     version "3.6.0"
@@ -4431,6 +4442,13 @@ Lockfile:
     dependencies:
       hoist-non-react-statics "^2.3.1"
   
+  react-native-safe-area-view@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-1.0.0.tgz#17be33aeb30702e07bb846378f4c9561e2dd6684"
+    integrity sha512-cJOBfM6t7HL3NQf3QTVKO6BU7esCCMbKJjpNy9L2nT724UzZ2y6E3ol/3QWsw7ySegWlF857+RIkRLsnpltFVg==
+    dependencies:
+      hoist-non-react-statics "^2.3.1"
+  
   "react-native-screens@^1.0.0 || ^1.0.0-alpha":
     version "1.0.0-alpha.23"
     resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.23.tgz#25d7ea4d11bda4fcde2d1da7ae50271c6aa636e0"
@@ -4625,6 +4643,11 @@ Lockfile:
     version "2.13.8"
     resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
     integrity sha512-8qlpooP2QqPtZHQZRhx3x3OP5skEV1py/zUdMY28WNAocbafxdG2tRD1MWE7sp8obGMNYuLWanhhQ7EQvT1FBg==
+  
+  redux-thunk@*, redux-thunk@^2.3.0:
+    version "2.3.0"
+    resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
+    integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
   
   redux@*, redux@^4.0.0, redux@^4.0.4:
     version "4.0.4"

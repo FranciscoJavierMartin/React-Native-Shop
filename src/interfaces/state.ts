@@ -16,8 +16,34 @@ export interface IOrdersState {
   orders: Order[],
 }
 
+export interface IAuthState {
+  token: string;
+  userId: string;
+}
+
 export interface IGlobalState {
   products: IProductsState;
   cart: ICartState;
   orders: IOrdersState;
+  auth: IAuthState;
+}
+
+interface IInputValues {
+  title: string;
+  imageUrl: string;
+  description: string;
+  price: string;
+}
+
+interface IInputValidities {
+  title: boolean;
+  imageUrl: boolean;
+  description: boolean;
+  price: boolean;
+}
+
+export interface IInputState {
+  inputValues: any;
+  inputValidities: any;
+  formIsValid: boolean;
 }

@@ -16,77 +16,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IEditProductsScreenParams } from '../../interfaces/params';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/ui/HeaderButton';
-import { IGlobalState } from '../../interfaces/state';
+import { IGlobalState, IInputState } from '../../interfaces/state';
 import Product from '../../models/product';
 import productsActions from '../../store/actions/products';
 import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
+import { IInputAction } from '../../interfaces/actions';
+import { formReducer, FORM_INPUT_UPDATE } from '../../utils/forms';
 
 interface IEditProductsScreenProps
   extends NavigationStackScreenProps<
     IEditProductsScreenParams,
     IEditProductsScreenProps
   > {}
-
-interface IInputValues {
-  title: string;
-  imageUrl: string;
-  description: string;
-  price: string;
-}
-
-interface IInputValidities {
-  title: boolean;
-  imageUrl: boolean;
-  description: boolean;
-  price: boolean;
-}
-
-interface IInputState {
-  inputValues: IInputValues;
-  inputValidities: IInputValidities;
-  formIsValid: boolean;
-}
-
-interface IInputAction {
-  type: string;
-  isValid: boolean;
-  value: string;
-  input: string;
-}
-
-const FORM_INPUT_UPDATE = 'UPDATE';
-
-const formReducer = (state: IInputState, action: IInputAction): IInputState => {
-  let newState: IInputState;
-
-  switch (action.type) {
-    case FORM_INPUT_UPDATE:
-      const updatedValues = {
-        ...state.inputValues,
-        [action.input]: action.value
-      };
-      const updatedValidities = {
-        ...state.inputValidities,
-        [action.input]: action.isValid
-      };
-
-      const updatedFormIsValid = Object.keys(updatedValidities).some(
-        (key: string) => updatedValidities[key]
-      );
-
-      newState = {
-        formIsValid: updatedFormIsValid,
-        inputValidities: updatedValidities,
-        inputValues: updatedValues
-      };
-      break;
-    default:
-      newState = state;
-  }
-
-  return newState;
-};
 
 const EditProductsScreen: NavigationStackScreenComponent<
   IEditProductsScreenParams,
@@ -168,7 +110,7 @@ const EditProductsScreen: NavigationStackScreenComponent<
   }, [submitHandler]);
 
   const inputChangeHandler = useCallback(
-    (inputIdentifier: string, inputValue: string, inputValidity: boolean) => {
+    (inputIdentifier: string, inputValue: string, inputValidity: boolean): void => {
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
         value: inputValue,
